@@ -10,7 +10,7 @@ spring:
           predicates:
             - Path=/api/chat/**
           filters:
-            - RewritePath=/api/app(?<segment>.*), ${segment}
+            - RewritePath=/api/chat(?<segment>.*), ${segment}
             - name: Retry
               args:
                 retries: 3
@@ -27,6 +27,27 @@ spring:
                 retries: 3
                 statutes: NOT_FOUND, INTERNAL_SERVER_ERROR
                 methods: DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT, TRACE
+        - id: frontendroute
+          uri: lb://FRONTEND
+          predicates:
+            - Path=/
+          filters:
+            - name: Retry
+              args:
+                retries: 3
+                statutes: NOT_FOUND, INTERNAL_SERVER_ERROR
+                methods: DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT, TRACE
+        - id: frontendstatisticroute
+          uri: lb://FRONTEND
+          predicates:
+            - Path=/statistic
+          filters:
+            - name: Retry
+              args:
+                retries: 3
+                statutes: NOT_FOUND, INTERNAL_SERVER_ERROR
+                methods: DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT, TRACE
+
       globalcors:
         cors-configurations:
           "[/**]":

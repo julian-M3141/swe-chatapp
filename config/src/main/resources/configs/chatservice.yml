@@ -1,0 +1,44 @@
+server:
+  port: 0   # uses random port
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db_chatapp?currentSchema=chat&serverTimezone=Europe/Vienna
+    username: chatuser
+    password: chatting
+  jpa:
+    generate-ddl: true
+    hibernate:
+      default-schema: chat
+      ddl-auto: create-drop
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+
+  jackson:
+    default-property-inclusion: non_empty
+
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:29092
+          auto-add-partitions: true
+      bindings:
+        output:
+          destination: chatservice.readers   # topic is automatically created in Kafka
+          content-type: application/json
+          producer:
+            partition-count: 3
+
+eureka:
+  client:
+    #    register-with-eureka: true
+    #    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${random.value}
+    prefer-ip-address: true
+
