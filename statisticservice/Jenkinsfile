@@ -1,0 +1,43 @@
+pipeline {
+	agent any
+
+	tools {
+		jdk "JDK 11"   /* may need to be adapted */
+		maven "Maven 3.6"   /* may need to be adapted */
+	}
+
+	stages {
+	    stage("Test") {
+            steps {
+                dir ("statisticservice"){
+                    sh "mvn test"
+                }
+            }
+        }
+
+		stage("Build") {
+			steps {
+			    dir ("statisticservice"){
+                    sh "mvn clean package"
+                }
+
+			}
+		}
+
+        stage("Build Dockerimage") {
+            steps {
+                dir ("statisticservice"){
+                    sh "docker build -t raspberrypi.local:5000/statisticservice ."
+                }
+            }
+        }
+
+		stage("Deploy Dockerimage") {
+		    steps  {
+		        dir ("statisticservice"){
+                    sh "docker push localhost:5000/statisticservice"
+                }
+		    }
+		}
+	}
+}

@@ -1,0 +1,43 @@
+pipeline {
+	agent any
+
+	tools {
+		jdk "JDK 11"   /* may need to be adapted */
+		maven "Maven 3.6"   /* may need to be adapted */
+	}
+
+	stages {
+	    stage("Test") {
+            steps {
+                dir ("frontend"){
+                    sh "mvn test"
+                }
+            }
+        }
+
+		stage("Build") {
+			steps {
+			    dir ("frontend"){
+                    sh "mvn clean package"
+                }
+
+			}
+		}
+
+        stage("Build Dockerimage") {
+            steps {
+                dir ("frontend"){
+                    sh "docker build -t raspberrypi.local:5000/frontend ."
+                }
+            }
+        }
+
+		stage("Deploy Dockerimage") {
+		    steps  {
+		        dir ("frontend"){
+                    sh "docker push localhost:5000/frontend"
+                }
+		    }
+		}
+	}
+}

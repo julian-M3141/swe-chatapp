@@ -35,3 +35,44 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  config:
+    build: ./config
+    ports:
+      - "8888:8888"
+    depends_on:
+      - kafka
+      - db
+
+  registry:
+    build: ./registry
+    ports:
+      - "8761:8761"
+
+    depends_on:
+      - config
+
+  gateway:
+    build: ./gateway
+    ports:
+      - "5555:5555"
+    depends_on:
+      - registry
+
+
+
+  chatservice:
+    build: ./chatservice
+    depends_on:
+      - gateway
+
+  statisticservice:
+    build: ./statisticservice
+    depends_on:
+      - gateway
+
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - chatservice
+      - statisticservice

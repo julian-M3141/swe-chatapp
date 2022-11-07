@@ -1,12 +1,7 @@
+
 spring:
   application:
     name: frontend
 
   config:
     import: configserver:http://localhost:8888
-
-
-
-
-
-

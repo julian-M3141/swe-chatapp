@@ -1,0 +1,43 @@
+pipeline {
+	agent any
+
+	tools {
+		jdk "JDK 11"   /* may need to be adapted */
+		maven "Maven 3.6"   /* may need to be adapted */
+	}
+
+	stages {
+	    stage("Test") {
+            steps {
+                dir ("chatservice"){
+                    sh "mvn test"
+                }
+            }
+        }
+
+		stage("Build") {
+			steps {
+			    dir ("chatservice"){
+                    sh "mvn clean package"
+                }
+
+			}
+		}
+
+        stage("Build Dockerimage") {
+            steps {
+                dir ("chatservice"){
+                    sh "docker build -t raspberrypi.local:5000/chatservice ."
+                }
+            }
+        }
+
+		stage("Deploy Dockerimage") {
+		    steps  {
+		        dir ("chatservice"){
+                    sh "docker push localhost:5000/chatservice"
+                }
+		    }
+		}
+	}
+}

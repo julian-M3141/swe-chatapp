@@ -12,7 +12,7 @@ public class IndexController {
         return "index";
     }
 
-    @GetMapping("statistic")
+    @GetMapping("/statistic")
     public String getStatistic(){
         return "statistic";
     }
