@@ -4,7 +4,8 @@ Chatapp zum Schreiben von Messages, die von allen Benutzern gesehen werden kann 
 
 Verwendet Jenkins zum Bauen der Applikation, Jenkins läuft bei mir auf einem Raspberry Pi, genauso wie eine lokale Dockerregistry. 
 Applikation kann mit docker-compose zum Laufen gebracht werden und läuft auf Port 5555.
-Leider funktioniert mit dokcer-compose das Fetchen der Konfig-Datei vom config-Server nicht, beim Starten in der IDE aber schon. 
+Leider funktioniert mit docker-compose das Fetchen der Konfig-Datei vom config-Server nicht, beim Starten in der IDE aber schon.
+Die Jar-Files werden bei mir von Jenkins erstellt und damit mittels Dockerfile das Dockerimage gebaut. Da mit .jar Files das Archiv für die Abgabe zu groß wäre, müssten die Services mit mvn package alle erstellt werden.
 
 Verwendete Faktoren
  1. git-Monorepository verwendet, mittels Jenkinsfile wird jede Applikation einzeln deployed. Es wird kein Code geteilt, würde aber mit Bibliothek gelöst werden. 

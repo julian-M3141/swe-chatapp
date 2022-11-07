@@ -2,6 +2,6 @@ FROM openjdk:11-jre-slim
 
 WORKDIR /app
 
-COPY target/app.jar .
+COPY target/* .
 
 CMD ["java","-jar","app.jar"]
